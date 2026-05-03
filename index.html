@@ -49,19 +49,21 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
+            background: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            font-weight: bold;
-            color: #333;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease;
         }
         .icon-btn:hover {
             transform: scale(1.1);
+        }
+        .icon-btn img {
+            width: 65%;
+            height: 65%;
+            object-fit: contain;
         }
         /* 二维码弹窗 */
         .mask {
@@ -97,11 +99,17 @@
         <img src="avatar.jpg" alt="头像">
     </div>
 
-    <!-- 三个图标按钮 -->
+    <!-- 三个图标按钮（已换成官方图标） -->
     <div class="icon-group">
-        <div class="icon-btn" onclick="showQR('qq')">QQ</div>
-        <div class="icon-btn" onclick="showQR('wechat')">微信</div>
-        <div class="icon-btn" onclick="showQR('douyin')">抖音</div>
+        <div class="icon-btn" onclick="showQR('qq')">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tencentqq.svg" alt="QQ">
+        </div>
+        <div class="icon-btn" onclick="showQR('wechat')">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/wechat.svg" alt="微信">
+        </div>
+        <div class="icon-btn" onclick="showQR('douyin')">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tiktok.svg" alt="抖音">
+        </div>
     </div>
 
     <!-- 二维码弹窗 -->
@@ -128,7 +136,6 @@
             document.getElementById('qrImg').src = qrSrc;
             document.getElementById('mask').style.display = 'flex';
         }
-
         function closeQR() {
             document.getElementById('mask').style.display = 'none';
         }
