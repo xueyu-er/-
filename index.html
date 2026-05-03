@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的联系方式</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: url('bg.jpg') no-repeat center center;
+            background-size: cover;
+            overflow: hidden;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        /* 头像样式 */
+        .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.85);
+            overflow: hidden;
+            position: absolute;
+            top: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* 图标区域 */
+        .icon-group {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 40px;
+        }
+        .icon-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+        /* 二维码弹窗 */
+        .mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .qr-card {
+            width: 280px;
+            height: 280px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+        }
+        .qr-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <!-- 头像 -->
+    <div class="avatar">
+        <img src="avatar.jpg" alt="头像">
+    </div>
+
+    <!-- 三个图标按钮 -->
+    <div class="icon-group">
+        <div class="icon-btn" onclick="showQR('qq')">QQ</div>
+        <div class="icon-btn" onclick="showQR('wechat')">微信</div>
+        <div class="icon-btn" onclick="showQR('douyin')">抖音</div>
+    </div>
+
+    <!-- 二维码弹窗 -->
+    <div class="mask" id="mask" onclick="closeQR()">
+        <div class="qr-card">
+            <img id="qrImg" src="" alt="二维码">
+        </div>
+    </div>
+
+    <script>
+        function showQR(type) {
+            let qrSrc = '';
+            switch (type) {
+                case 'qq':
+                    qrSrc = 'qq.png';
+                    break;
+                case 'wechat':
+                    qrSrc = 'wechat.png';
+                    break;
+                case 'douyin':
+                    qrSrc = 'douyin.png';
+                    break;
+            }
+            document.getElementById('qrImg').src = qrSrc;
+            document.getElementById('mask').style.display = 'flex';
+        }
+
+        function closeQR() {
+            document.getElementById('mask').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
