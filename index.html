@@ -11,8 +11,8 @@
             box-sizing: border-box;
         }
         body {
-            width: 100vw;
-            height: 100vh;
+            width:100vw;
+            height:100vh;
             background: url('bg.jpg') no-repeat center center;
             background-size: cover;
             overflow: hidden;
@@ -91,15 +91,34 @@
             height: 100%;
             object-fit: contain;
         }
+
+        /* 音乐按钮样式 */
+        .music-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 99;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
+
     <!-- 头像 -->
     <div class="avatar">
         <img src="avatar.jpg" alt="头像">
     </div>
 
-    <!-- 三个图标按钮（已换成官方图标） -->
+    <!-- 图标按钮 -->
     <div class="icon-group">
         <div class="icon-btn" onclick="showQR('qq')">
             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tencentqq.svg" alt="QQ">
@@ -119,26 +138,53 @@
         </div>
     </div>
 
-    <script>
-        function showQR(type) {
-            let qrSrc = '';
-            switch (type) {
-                case 'qq':
-                    qrSrc = 'qq.png';
-                    break;
-                case 'wechat':
-                    qrSrc = 'wechat.png';
-                    break;
-                case 'douyin':
-                    qrSrc = 'douyin.png';
-                    break;
-            }
-            document.getElementById('qrImg').src = qrSrc;
-            document.getElementById('mask').style.display = 'flex';
+    <!-- 音乐播放按钮 -->
+    <div class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</div>
+
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome/svgs/solid/music.svg" type="audio/mpeg">
+        <source src="https://api.dujin.org/bgmusic/" type="audio/mp3">
+    
+
+<script>
+    // 二维码功能
+    function showQR(type) {
+        let qrSrc = '';
+        switch (type) {
+            case 'qq': qrSrc = 'qq.png'; break;
+            case 'wechat': qrSrc = 'wechat.png'; break;
+            case 'douyin': qrSrc = 'douyin.png'; break;
         }
-        function closeQR() {
-            document.getElementById('mask').style.display = 'none';
+        document.getElementById('qrImg').src = qrSrc;
+        document.getElementById('mask').style.display = 'flex';
+    }
+    function closeQR() {
+        document.getElementById('mask').style.display = 'none';
+    }
+
+    // 音乐控制
+    const audio = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    let isPlay = false;
+
+    function toggleMusic() {
+        if (!isPlay) {
+            audio.play();
+            musicBtn.textContent = '⏸';
+            isPlay = true;
+        } else {
+            audio.pause();
+            musicBtn.textContent = '🎵';
+            isPlay = false;
         }
-    </script>
+    }
+
+    // 页面加载后自动准备
+    window.addEventListener('load', () => {
+        audio.volume = 0.4;
+    });
+</script>
+
 </body>
 </html>
