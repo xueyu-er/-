@@ -20,7 +20,6 @@
             font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
         }
 
-        /* 毛玻璃遮罩层，让内容更清晰 */
         .overlay {
             position: fixed;
             inset: 0;
@@ -44,7 +43,6 @@
             justify-content: center;
         }
 
-        /* 头像 */
         .avatar {
             width: 120px;
             height: 120px;
@@ -62,7 +60,6 @@
             display: block;
         }
 
-        /* 签名文字 */
         .signature {
             margin-top: 20px;
             color: #fff;
@@ -73,7 +70,6 @@
             animation: fadeDown 0.8s ease-out 0.2s both;
         }
 
-        /* 图标区域 */
         .icon-group {
             position: absolute;
             bottom: 14%;
@@ -117,7 +113,6 @@
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
         }
 
-        /* 二维码弹窗 */
         .mask {
             position: fixed;
             inset: 0;
@@ -168,7 +163,6 @@
             display: block;
         }
 
-        /* 音乐按钮 */
         .music-btn {
             position: fixed;
             top: 24px;
@@ -199,7 +193,6 @@
             animation: spin 3s linear infinite;
         }
 
-        /* 动画 */
         @keyframes fadeDown {
             from {
                 opacity: 0;
@@ -227,7 +220,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 底部装饰线 */
         .footer-line {
             position: absolute;
             bottom: 8%;
@@ -247,15 +239,12 @@
     <div class="overlay"></div>
 
     <div class="container">
-        <!-- 头像 -->
         <div class="avatar">
             <img src="avatar.jpg" alt="头像">
         </div>
 
-        <!-- 签名 -->
         <div class="signature">很高兴认识你</div>
 
-        <!-- 图标按钮 -->
         <div class="icon-group">
             <div class="icon-btn" onclick="showQR('qq', 'QQ')">
                 <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tencentqq.svg" alt="QQ">
@@ -271,7 +260,6 @@
         <div class="footer-line"></div>
     </div>
 
-    <!-- 二维码弹窗 -->
     <div class="mask" id="mask" onclick="closeQR(event)">
         <div class="qr-card" onclick="event.stopPropagation()">
             <div class="qr-label" id="qrLabel">扫码添加</div>
@@ -279,66 +267,45 @@
         </div>
     </div>
 
-    <!-- 音乐播放按钮 -->
     <button class="music-btn" id="musicBtn" onclick="toggleMusic()" aria-label="音乐">🎵</button>
 
-    <!-- 背景音乐 -->
-    <audio id="bgMusic" loop preload="none">
+    <audio id="bgMusic" loop>
         <source src="bgmusic.mp3" type="audio/mpeg">
-    </audio>
+    
 
-    <script>
-        // 二维码功能
-        const qrMap = {
-            qq: 'qq.png',
-            wechat: 'wechat.png',
-            douyin: 'douyin.png'
-        };
+<script>
+const qrMap = { qq: 'qq.png', wechat: 'wechat.png', douyin: 'douyin.png' };
+function showQR(type, label) {
+    const img = document.getElementById('qrImg');
+    const mask = document.getElementById('mask');
+    document.getElementById('qrLabel').textContent = label + ' · 扫码添加';
+    img.src = qrMap[type] || '';
+    mask.classList.add('active');
+}
+function closeQR(e) {
+    if (e.target === document.getElementById('mask')) {
+        document.getElementById('mask').classList.remove('active');
+    }
+}
 
-        function showQR(type, label) {
-            const img = document.getElementById('qrImg');
-            const mask = document.getElementById('mask');
-            document.getElementById('qrLabel').textContent = label + ' · 扫码添加';
-            img.src = qrMap[type] || '';
-            mask.classList.add('active');
-        }
+const audio = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicBtn');
+let isPlay = false;
 
-        function closeQR(e) {
-            if (e.target === document.getElementById('mask')) {
-                document.getElementById('mask').classList.remove('active');
-            }
-        }
-
-        // 音乐控制
-        const audio = document.getElementById('bgMusic');
-        const musicBtn = document.getElementById('musicBtn');
-        let isPlay = false;
-
-        function toggleMusic() {
-            if (!isPlay) {
-                audio.play();
-                musicBtn.textContent = '⏸';
-                musicBtn.classList.add('playing');
-                isPlay = true;
-            } else {
-                audio.pause();
-                musicBtn.textContent = '🎵';
-                musicBtn.classList.remove('playing');
-                isPlay = false;
-            }
-        }
-
-        window.addEventListener('load', () => {
-            audio.volume = 0.4;
-        });
-
-        // ESC 关闭弹窗
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.getElementById('mask').classList.remove('active');
-            }
-        });
-    </script>
+function toggleMusic() {
+    audio.volume = 0.5;
+    if (!isPlay) {
+        audio.play().then(() => {
+            musicBtn.textContent = '⏸';
+            isPlay = true;
+        }).catch(err => {});
+    } else {
+        audio.pause();
+        musicBtn.textContent = '🎵';
+        isPlay = false;
+    }
+}
+</script>
 
 </body>
 </html>
