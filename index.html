@@ -10,164 +10,335 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            width:100vw;
-            height:100vh;
+            width: 100vw;
+            height: 100vh;
             background: url('bg.jpg') no-repeat center center;
             background-size: cover;
             overflow: hidden;
-            font-family: "Microsoft YaHei", sans-serif;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
         }
+
+        /* 毛玻璃遮罩层，让内容更清晰 */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.15) 0%,
+                rgba(0, 0, 0, 0.05) 40%,
+                rgba(0, 0, 0, 0.25) 100%
+            );
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 头像 */
         .avatar {
-            width: 130px;
-            height: 130px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 4px solid rgba(255, 255, 255, 0.85);
+            border: 3px solid rgba(255, 255, 255, 0.9);
             overflow: hidden;
-            position: absolute;
-            top: 12%;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            animation: fadeDown 0.8s ease-out both;
         }
+
         .avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
+
+        /* 签名文字 */
+        .signature {
+            margin-top: 20px;
+            color: #fff;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            animation: fadeDown 0.8s ease-out 0.2s both;
+        }
+
+        /* 图标区域 */
         .icon-group {
             position: absolute;
-            bottom: 15%;
+            bottom: 14%;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 40px;
+            gap: 36px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out 0.4s both;
         }
+
         .icon-btn {
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        box-shadow 0.25s ease;
         }
+
         .icon-btn:hover {
-            transform: scale(1.1);
+            transform: translateY(-4px) scale(1.08);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
         }
+
+        .icon-btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
         .icon-btn img {
-            width: 65%;
-            height: 65%;
+            width: 55%;
+            height: 55%;
             object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
         }
+
+        /* 二维码弹窗 */
         .mask {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
             align-items: center;
             justify-content: center;
             z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
+
+        .mask.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
         .qr-card {
-            width: 280px;
-            height: 280px;
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            width: 260px;
+            background: #fff;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+
+        .mask.active .qr-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .qr-label {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
         .qr-card img {
             width: 100%;
-            height: 100%;
+            aspect-ratio: 1;
             object-fit: contain;
+            border-radius: 8px;
+            display: block;
         }
+
+        /* 音乐按钮 */
         .music-btn {
             position: fixed;
-            top: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
+            top: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 18px;
             cursor: pointer;
             z-index: 99;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.25s ease;
+            border: none;
+            outline: none;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .music-btn.playing {
+            animation: spin 3s linear infinite;
+        }
+
+        /* 动画 */
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 底部装饰线 */
+        .footer-line {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 1px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out 0.6s both;
         }
     </style>
 </head>
 <body>
 
-<div class="avatar">
-    <img src="avatar.jpg" alt="头像">
-</div>
+    <div class="overlay"></div>
 
-<div class="icon-group">
-    <div class="icon-btn" onclick="showQR('qq')">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tencentqq.svg" alt="QQ">
+    <div class="container">
+        <!-- 头像 -->
+        <div class="avatar">
+            <img src="avatar.jpg" alt="头像">
+        </div>
+
+        <!-- 签名 -->
+        <div class="signature">很高兴认识你</div>
+
+        <!-- 图标按钮 -->
+        <div class="icon-group">
+            <div class="icon-btn" onclick="showQR('qq', 'QQ')">
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tencentqq.svg" alt="QQ">
+            </div>
+            <div class="icon-btn" onclick="showQR('wechat', '微信')">
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/wechat.svg" alt="微信">
+            </div>
+            <div class="icon-btn" onclick="showQR('douyin', '抖音')">
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tiktok.svg" alt="抖音">
+            </div>
+        </div>
+
+        <div class="footer-line"></div>
     </div>
-    <div class="icon-btn" onclick="showQR('wechat')">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/wechat.svg" alt="微信">
+
+    <!-- 二维码弹窗 -->
+    <div class="mask" id="mask" onclick="closeQR(event)">
+        <div class="qr-card" onclick="event.stopPropagation()">
+            <div class="qr-label" id="qrLabel">扫码添加</div>
+            <img id="qrImg" src="" alt="二维码">
+        </div>
     </div>
-    <div class="icon-btn" onclick="showQR('douyin')">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tiktok.svg" alt="抖音">
-    </div>
-</div>
 
-<div class="mask" id="mask" onclick="closeQR()">
-    <div class="qr-card">
-        <img id="qrImg" src="" alt="二维码">
-    </div>
-</div>
+    <!-- 音乐播放按钮 -->
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" aria-label="音乐">🎵</button>
 
-<div class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</div>
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop preload="none">
+        <source src="bgmusic.mp3" type="audio/mpeg">
+    </audio>
 
-<audio id="bgMusic" loop>
-    <source src="bgmusic.mp3" type="audio/mp3">
+    <script>
+        // 二维码功能
+        const qrMap = {
+            qq: 'qq.png',
+            wechat: 'wechat.png',
+            douyin: 'douyin.png'
+        };
 
+        function showQR(type, label) {
+            const img = document.getElementById('qrImg');
+            const mask = document.getElementById('mask');
+            document.getElementById('qrLabel').textContent = label + ' · 扫码添加';
+            img.src = qrMap[type] || '';
+            mask.classList.add('active');
+        }
 
-<script>
-function showQR(type) {
-    let qrSrc = '';
-    switch (type) {
-        case 'qq': qrSrc = 'qq.png'; break;
-        case 'wechat': qrSrc = 'wechat.png'; break;
-        case 'douyin': qrSrc = 'douyin.png'; break;
-    }
-    document.getElementById('qrImg').src = qrSrc;
-    document.getElementById('mask').style.display = 'flex';
-}
-function closeQR() {
-    document.getElementById('mask').style.display = 'none';
-}
+        function closeQR(e) {
+            if (e.target === document.getElementById('mask')) {
+                document.getElementById('mask').classList.remove('active');
+            }
+        }
 
-const audio = document.getElementById('bgMusic');
-const musicBtn = document.getElementById('musicBtn');
-let isPlay = false;
+        // 音乐控制
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        let isPlay = false;
 
-// 修复：确保每次点击都能正常播放/暂停
-function toggleMusic() {
-    audio.volume = 0.4;
-    if (!isPlay) {
-        audio.play();
-        musicBtn.textContent = '⏸';
-        isPlay = true;
-    } else {
-        audio.pause();
-        musicBtn.textContent = '🎵';
-        isPlay = false;
-    }
-}
-</script>
+        function toggleMusic() {
+            if (!isPlay) {
+                audio.play();
+                musicBtn.textContent = '⏸';
+                musicBtn.classList.add('playing');
+                isPlay = true;
+            } else {
+                audio.pause();
+                musicBtn.textContent = '🎵';
+                musicBtn.classList.remove('playing');
+                isPlay = false;
+            }
+        }
+
+        window.addEventListener('load', () => {
+            audio.volume = 0.4;
+        });
+
+        // ESC 关闭弹窗
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('mask').classList.remove('active');
+            }
+        });
+    </script>
+
 </body>
 </html>
